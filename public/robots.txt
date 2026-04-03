@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /investisseurs
+
+Sitemap: https://tablecho.com/sitemap.xml
