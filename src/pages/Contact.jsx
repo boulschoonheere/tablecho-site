@@ -46,7 +46,7 @@ const Contact = () => {
     setSending(true)
 
     try {
-      const res = await fetch('/api/notion', {
+      const res = await fetch('https://n8n.srv1496863.hstgr.cloud/webhook/tablecho-lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -67,14 +67,11 @@ const Contact = () => {
         }),
       })
 
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}))
-        throw new Error(err.error || `Erreur ${res.status}`)
-      }
+      if (!res.ok) throw new Error(`Erreur ${res.status}`)
 
       setDone(true)
     } catch (e) {
-      setError('Une erreur est survenue. Réessayez ou écrivez directement à ' + 'form.action1pro@gmail.com')
+      setError('Une erreur est survenue. Réessayez ou écrivez directement à form.action1pro@gmail.com')
     } finally {
       setSending(false)
     }
