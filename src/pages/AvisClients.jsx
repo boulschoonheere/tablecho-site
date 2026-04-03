@@ -76,7 +76,7 @@ const AvisClients = () => (
     <section className="bg-anthracite pt-32 pb-20 px-6">
       <div className="max-w-4xl mx-auto text-center">
         <FadeUp>
-          <p className="font-inter text-xs text-or/80 uppercase tracking-widest mb-4">Le enjeu</p>
+          <p className="font-inter text-xs text-or/80 uppercase tracking-widest mb-4">L'enjeu</p>
           <h1 className="font-playfair text-4xl md:text-6xl text-white mb-6">
             Les avis Google décident à votre place
           </h1>
