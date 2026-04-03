@@ -12,7 +12,7 @@ const Contact = () => {
     nom: '',
     email: '',
     telephone: '',
-    restaurant: '',
+    etablissement: '',
     ville: '',
     message: '',
   })
@@ -45,30 +45,33 @@ const Contact = () => {
 
     setSending(true)
 
+    const payload = {
+      nom: `${form.prenom} ${form.nom}`.trim(),
+      email: form.email,
+      telephone: form.telephone,
+      etablissement: form.etablissement,
+      ville: form.ville,
+      message: form.message,
+      note_google: quizNote,
+      volume_avis: quizVolume,
+      profil_quiz: quizProfil,
+      score_quiz: quizScore,
+      source: '📝 Formulaire contact',
+    }
+
     try {
-      const res = await fetch('https://n8n.srv1496863.hstgr.cloud/webhook/tablecho-lead', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          prenom: form.prenom,
-          nom: form.nom,
-          email: form.email,
-          telephone: form.telephone,
-          restaurant: form.restaurant,
-          ville: form.ville,
-          message: form.message,
-          source: quizSource || '🌐 Site web',
-          profil: quizProfil,
-          score: quizScore,
-          volume: quizVolume,
-          note: quizNote,
-          temps: quizTemps,
-          frein: quizFrein,
+      await Promise.all([
+        fetch('https://n8n.srv1496863.hstgr.cloud/webhook/tablecho-lead', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
         }),
-      })
-
-      if (!res.ok) throw new Error(`Erreur ${res.status}`)
-
+        fetch('https://n8n.srv1496863.hstgr.cloud/webhook/tablecho-bienvenue', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        }),
+      ])
       setDone(true)
     } catch (e) {
       setError('Une erreur est survenue. Réessayez ou écrivez directement à form.action1pro@gmail.com')
@@ -227,12 +230,12 @@ const Contact = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
                   <label className="font-inter text-sm font-semibold text-anthracite block mb-2">
-                    Nom de votre restaurant
+                    Nom de votre établissement
                   </label>
                   <input
                     type="text"
-                    name="restaurant"
-                    value={form.restaurant}
+                    name="etablissement"
+                    value={form.etablissement}
                     onChange={handleChange}
                     placeholder="Le Bistrot du Port"
                     className="w-full border border-bordure rounded-lg px-4 py-3 font-inter text-sm
