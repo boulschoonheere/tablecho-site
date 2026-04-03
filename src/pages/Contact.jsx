@@ -1,11 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { CONFIG } from '../config'
-
-const FORMSPREE_ID = import.meta.env.VITE_FORMSPREE_ID
 
 const Contact = () => {
   const [searchParams] = useSearchParams()
@@ -47,39 +45,8 @@ const Contact = () => {
 
     setSending(true)
 
-    const fullMessage = [
-      form.message,
-      quizProfil ? `\n— Résultat quiz : ${quizProfil} (score ${quizScore}/18)` : '',
-      quizVolume ? `Volume avis : ${quizVolume}` : '',
-      quizNote ? `Note Google : ${quizNote}` : '',
-      quizTemps ? `Temps réponse : ${quizTemps}` : '',
-      quizFrein ? `Frein principal : ${quizFrein}` : '',
-    ].filter(Boolean).join('\n')
-
-    // 1. Formspree
     try {
-      const fsRes = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({
-          prenom: form.prenom,
-          nom: form.nom,
-          email: form.email,
-          telephone: form.telephone,
-          restaurant: form.restaurant,
-          ville: form.ville,
-          message: fullMessage,
-          _subject: `Nouveau contact Tablecho — ${form.prenom} ${form.nom}`,
-        }),
-      })
-      if (!fsRes.ok) throw new Error('Formspree error')
-    } catch {
-      // Formspree failure non-bloquant
-    }
-
-    // 2. Notion via proxy serverless
-    try {
-      await fetch('/api/notion', {
+      const res = await fetch('/api/notion', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -99,12 +66,18 @@ const Contact = () => {
           frein: quizFrein,
         }),
       })
-    } catch {
-      // Notion failure non-bloquant
-    }
 
-    setSending(false)
-    setDone(true)
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        throw new Error(err.error || `Erreur ${res.status}`)
+      }
+
+      setDone(true)
+    } catch (e) {
+      setError('Une erreur est survenue. Réessayez ou écrivez directement à ' + 'form.action1pro@gmail.com')
+    } finally {
+      setSending(false)
+    }
   }
 
   if (done) {

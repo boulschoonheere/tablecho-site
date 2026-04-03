@@ -9,8 +9,17 @@ export default async function handler(req, res) {
   const token = process.env.NOTION_TOKEN
   const dbId = process.env.NOTION_DB_ID
 
+  // Diagnostic — visible dans les logs Vercel Functions
+  console.log('[notion] NOTION_TOKEN présent :', Boolean(token))
+  console.log('[notion] NOTION_DB_ID présent :', Boolean(dbId))
+  console.log('[notion] DB_ID value :', dbId)
+
   if (!token || !dbId) {
-    return res.status(500).json({ error: 'Missing Notion configuration' })
+    console.error('[notion] Variables manquantes — vérifie Vercel Dashboard > Settings > Environment Variables')
+    return res.status(500).json({
+      error: 'Missing Notion configuration',
+      debug: { token: Boolean(token), dbId: Boolean(dbId) },
+    })
   }
 
   const {
@@ -75,6 +84,8 @@ export default async function handler(req, res) {
     }
   }
 
+  console.log('[notion] Payload envoyé à Notion :', JSON.stringify({ parent: { database_id: dbId }, properties }, null, 2))
+
   try {
     const notionRes = await fetch('https://api.notion.com/v1/pages', {
       method: 'POST',
@@ -91,14 +102,16 @@ export default async function handler(req, res) {
 
     if (!notionRes.ok) {
       const err = await notionRes.text()
-      console.error('Notion API error:', err)
-      return res.status(502).json({ error: 'Notion API error', detail: err })
+      console.error('[notion] Notion API error status:', notionRes.status)
+      console.error('[notion] Notion API error body:', err)
+      return res.status(502).json({ error: 'Notion API error', status: notionRes.status, detail: err })
     }
 
     const data = await notionRes.json()
+    console.log('[notion] Page créée avec succès, id:', data.id)
     return res.status(200).json({ ok: true, id: data.id })
   } catch (e) {
-    console.error('Fetch error:', e)
-    return res.status(500).json({ error: 'Internal error' })
+    console.error('[notion] Fetch error:', e.message)
+    return res.status(500).json({ error: 'Internal error', detail: e.message })
   }
 }
