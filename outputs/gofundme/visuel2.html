@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<title>Tablecho — Visuel 2 — La solution</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600;700&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:#111;display:flex;flex-direction:column;align-items:center;padding:32px 16px;font-family:'Inter',sans-serif;}
+  #stage{
+    width:1200px;height:675px;position:relative;overflow:hidden;
+    flex-shrink:0;
+    background:linear-gradient(135deg,#0e0c09 0%,#1C1C1C 35%,#1a1508 65%,#0e0e0e 100%);
+  }
+  /* Dégradé radial gold accent */
+  .bg-glow{
+    position:absolute;inset:0;
+    background:radial-gradient(ellipse 55% 70% at 75% 50%, rgba(201,168,76,0.08) 0%, transparent 65%),
+               radial-gradient(ellipse 40% 40% at 20% 80%, rgba(201,168,76,0.04) 0%, transparent 60%);
+  }
+  /* Grille subtile */
+  .bg-grid{
+    position:absolute;inset:0;
+    background-image:linear-gradient(rgba(201,168,76,0.04) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(201,168,76,0.04) 1px,transparent 1px);
+    background-size:60px 60px;
+  }
+  /* Panneau central card */
+  .card{
+    position:absolute;left:80px;top:50%;transform:translateY(-50%);
+    width:580px;
+  }
+  .eyebrow{
+    font-family:'Inter',sans-serif;font-size:11px;color:rgba(201,168,76,0.7);
+    letter-spacing:0.25em;text-transform:uppercase;font-weight:700;margin-bottom:24px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .eyebrow::before{content:'';display:block;width:28px;height:1px;background:#C9A84C;opacity:0.6;}
+  .title{
+    font-family:'Playfair Display',serif;
+    font-size:46px;line-height:1.18;color:#FAF7F2;font-weight:700;margin-bottom:24px;
+  }
+  .title em{color:#C9A84C;font-style:italic;}
+  .subtitle{
+    font-family:'Inter',sans-serif;font-size:16px;color:rgba(250,247,242,0.6);
+    line-height:1.7;margin-bottom:40px;
+  }
+  /* Pills */
+  .pills{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:44px;}
+  .pill{
+    background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);
+    border-radius:24px;padding:8px 20px;
+    font-family:'Inter',sans-serif;font-size:13px;color:rgba(250,247,242,0.8);font-weight:600;
+    letter-spacing:0.03em;
+  }
+  /* Étapes */
+  .steps{display:flex;flex-direction:column;gap:12px;}
+  .step{display:flex;align-items:center;gap:16px;}
+  .step-num{
+    width:28px;height:28px;border-radius:50%;
+    background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.4);
+    font-family:'Playfair Display',serif;font-size:13px;color:#C9A84C;font-weight:700;
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .step-text{font-family:'Inter',sans-serif;font-size:14px;color:rgba(250,247,242,0.65);line-height:1.4;}
+  /* Panel droit — note visualisation */
+  .right-panel{
+    position:absolute;right:64px;top:50%;transform:translateY(-50%);
+    width:340px;
+  }
+  .note-card{
+    background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.2);
+    border-radius:20px;padding:36px 32px;text-align:center;margin-bottom:16px;
+    position:relative;
+  }
+  .note-card::before{
+    content:'AVANT';position:absolute;top:-10px;left:50%;transform:translateX(-50%);
+    background:#1C1C1C;padding:2px 12px;
+    font-family:'Inter',sans-serif;font-size:9px;color:rgba(250,247,242,0.35);letter-spacing:0.15em;
+  }
+  .note-card.after::before{content:'APRÈS';color:rgba(201,168,76,0.6);}
+  .stars{display:flex;justify-content:center;gap:4px;margin-bottom:12px;}
+  .star{font-size:22px;}
+  .star.filled{color:#C9A84C;}
+  .star.half{color:rgba(201,168,76,0.35);}
+  .note-val{font-family:'Playfair Display',serif;font-size:52px;color:#FAF7F2;font-weight:700;line-height:1;}
+  .note-val.gold{color:#C9A84C;}
+  .note-sub{font-family:'Inter',sans-serif;font-size:11px;color:rgba(250,247,242,0.4);margin-top:8px;letter-spacing:0.05em;}
+  .arrow-down{
+    text-align:center;font-size:24px;color:rgba(201,168,76,0.5);margin:8px 0;
+  }
+  /* Logo Tablecho coin */
+  .logo-corner{
+    position:absolute;bottom:68px;right:64px;
+    font-family:'Playfair Display',serif;font-size:22px;color:#C9A84C;font-weight:700;
+    letter-spacing:0.02em;
+  }
+  /* Footer */
+  .footer-bar{
+    position:absolute;bottom:0;left:0;right:0;height:52px;
+    background:rgba(14,14,14,0.98);border-top:1px solid rgba(201,168,76,0.12);
+    display:flex;align-items:center;justify-content:space-between;padding:0 48px;
+  }
+  .logo{font-family:'Playfair Display',serif;font-size:18px;color:#C9A84C;font-weight:700;}
+  .tagline{font-family:'Inter',sans-serif;font-size:11px;color:rgba(250,247,242,0.35);letter-spacing:0.08em;}
+  .url{font-family:'Inter',sans-serif;font-size:11px;color:rgba(201,168,76,0.45);letter-spacing:0.05em;}
+  /* Separateur vertical */
+  .v-sep{position:absolute;left:700px;top:80px;bottom:80px;width:1px;background:linear-gradient(180deg,transparent,rgba(201,168,76,0.15),transparent);}
+  /* Export */
+  #export-btn{
+    margin-top:24px;padding:12px 32px;background:#C9A84C;color:#1C1C1C;
+    font-family:'Inter',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.05em;
+    border:none;border-radius:8px;cursor:pointer;transition:opacity 0.2s;
+  }
+  #export-btn:hover{opacity:0.85;}
+  #export-btn:disabled{opacity:0.5;cursor:not-allowed;}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="bg-glow"></div>
+  <div class="bg-grid"></div>
+  <div class="v-sep"></div>
+
+  <!-- Contenu gauche -->
+  <div class="card">
+    <p class="eyebrow">La solution</p>
+    <h1 class="title">Tablecho automatise<br>vos réponses aux<br><em>avis clients</em></h1>
+    <p class="subtitle">Intelligence artificielle entraînée sur votre ton.<br>Chaque réponse validée par vous avant publication.</p>
+    <div class="pills">
+      <span class="pill">🤖 IA personnalisée</span>
+      <span class="pill">✅ Validation humaine</span>
+      <span class="pill">⚡ 15 min d'installation</span>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">Tablecho détecte chaque nouvel avis Google en temps réel</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text">L'IA génère une réponse dans votre voix, adaptée au contexte</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text">Vous validez en 30 secondes — puis publication automatique</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel droit — évolution note -->
+  <div class="right-panel">
+    <div class="note-card">
+      <div class="stars">
+        <span class="star filled">★</span>
+        <span class="star filled">★</span>
+        <span class="star filled">★</span>
+        <span class="star half">★</span>
+        <span class="star half">★</span>
+      </div>
+      <div class="note-val">3,9</div>
+      <div class="note-sub">Sans Tablecho</div>
+    </div>
+    <div class="arrow-down">↓</div>
+    <div class="note-card after">
+      <div class="stars">
+        <span class="star filled">★</span>
+        <span class="star filled">★</span>
+        <span class="star filled">★</span>
+        <span class="star filled">★</span>
+        <span class="star filled">★</span>
+      </div>
+      <div class="note-val gold">4,8</div>
+      <div class="note-sub">Avec Tablecho</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer-bar">
+    <span class="logo">Tablecho</span>
+    <span class="tagline">Notre mission : préserver votre réputation.</span>
+    <span class="url">tablecho.com</span>
+  </div>
+</div>
+
+<button id="export-btn" onclick="exportPNG()">⬇ Exporter en PNG</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+async function exportPNG() {
+  const btn = document.getElementById('export-btn');
+  btn.disabled = true; btn.textContent = 'Export en cours…';
+  const canvas = await html2canvas(document.getElementById('stage'), {
+    scale: 2, useCORS: true, allowTaint: true,
+    width: 1200, height: 675, backgroundColor: '#1C1C1C'
+  });
+  const a = document.createElement('a');
+  a.download = 'tablecho-visuel2-solution.png';
+  a.href = canvas.toDataURL('image/png');
+  a.click();
+  btn.disabled = false; btn.textContent = '⬇ Exporter en PNG';
+}
+</script>
+</body>
+</html>

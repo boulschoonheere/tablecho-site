@@ -1,0 +1,193 @@
+{
+  "name": "Tablecho — Bienvenue Lead",
+  "nodes": [
+    {
+      "id": "w2-node-001",
+      "name": "Webhook Bienvenue",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [200, 300],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tablecho-bienvenue",
+        "responseMode": "onReceived",
+        "responseData": "allEntries"
+      }
+    },
+    {
+      "id": "w2-node-002",
+      "name": "Switch Profil Quiz",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [450, 300],
+      "parameters": {
+        "mode": "rules",
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": { "caseSensitive": false, "leftValue": "", "typeValidation": "strict" },
+                "conditions": [
+                  {
+                    "id": "cond-expose",
+                    "leftValue": "={{ $json.profil }}",
+                    "rightValue": "Expos",
+                    "operator": { "type": "string", "operation": "contains" }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Exposé"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": false, "leftValue": "", "typeValidation": "strict" },
+                "conditions": [
+                  {
+                    "id": "cond-progression",
+                    "leftValue": "={{ $json.profil }}",
+                    "rightValue": "progression",
+                    "operator": { "type": "string", "operation": "contains" }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "En progression"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": false, "leftValue": "", "typeValidation": "strict" },
+                "conditions": [
+                  {
+                    "id": "cond-pret",
+                    "leftValue": "={{ $json.profil }}",
+                    "rightValue": "Pr",
+                    "operator": { "type": "string", "operation": "contains" }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Prêt"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "w2-node-003",
+      "name": "Email Exposé",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [750, 100],
+      "parameters": {
+        "sendTo": "={{ $json.email }}",
+        "subject": "={{ $json.prenom }}, votre réputation est vulnérable — voici quoi faire",
+        "message": "=<p>Bonjour {{ $json.prenom }},</p><p>Vous venez de compléter le diagnostic Tablecho. Votre score indique que votre réputation en ligne est <strong>exposée</strong>.</p><p>Concrètement : des avis non répondus chaque semaine signifient <strong>70 % de chances en moins</strong> que le prochain client choisisse votre établissement.</p><p>Tablecho a été conçu exactement pour cette situation. En 15 minutes de configuration, vos avis Google sont traités, vos réponses rédigées dans votre voix, soumises à votre validation avant publication.</p><p>Je serais ravi d'en discuter avec vous directement. <a href=\"https://calendly.com/boulschoonheere\">Réservez un créneau de 20 minutes ici</a> — c'est gratuit, sans engagement.</p><p>À très bientôt,</p><p><strong>François Boul Schoonheere</strong><br>Fondateur — Tablecho<br><em>Notre mission : préserver votre réputation.</em></p>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SiVSco03lOU6mduQ",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "id": "w2-node-004",
+      "name": "Email En progression",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [750, 300],
+      "parameters": {
+        "sendTo": "={{ $json.email }}",
+        "subject": "={{ $json.prenom }}, vous gérez déjà — Tablecho peut aller plus loin pour vous",
+        "message": "=<p>Bonjour {{ $json.prenom }},</p><p>Votre diagnostic Tablecho montre que vous <strong>prenez déjà le sujet des avis au sérieux</strong>. C'est une vraie force — la plupart des restaurateurs ne le font pas.</p><p>Mais vous consacrez du temps à quelque chose que Tablecho peut automatiser. Ce temps, vous pourriez le passer en salle, en cuisine, ou simplement à décompresser après le service.</p><p>Tablecho ne remplace pas votre voix — il la reproduit, soumet chaque réponse à votre validation, et gère le flux à votre place. <strong>2 minutes par semaine</strong> au lieu de 30.</p><p>Je vous propose un échange de 20 minutes pour voir si Tablecho correspond à votre fonctionnement. <a href=\"https://calendly.com/boulschoonheere\">Choisissez un créneau ici.</a></p><p>Bien à vous,</p><p><strong>François Boul Schoonheere</strong><br>Fondateur — Tablecho<br><em>Notre mission : préserver votre réputation.</em></p>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SiVSco03lOU6mduQ",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "id": "w2-node-005",
+      "name": "Email Prêt",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [750, 500],
+      "parameters": {
+        "sendTo": "={{ $json.email }}",
+        "subject": "={{ $json.prenom }}, vous êtes exactement le profil qu'on cherche",
+        "message": "=<p>Bonjour {{ $json.prenom }},</p><p>Votre diagnostic Tablecho est clair : <strong>vous comprenez l'enjeu, vous êtes exposé, et vous cherchez une solution.</strong> C'est précisément le profil de nos premiers bêta-testeurs.</p><p>Tablecho est actuellement en phase de déploiement dans le Golfe de Saint-Tropez et en PACA. Nous sélectionnons un nombre limité de restaurateurs pour co-construire le produit avec nous — et bénéficier des conditions préférentielles qui vont avec.</p><p><strong>Ce que vous gagnez en tant que bêta-testeur :</strong></p><ul><li>Accès prioritaire avant le lancement public</li><li>Tarif bêta préférentiel</li><li>Votre voix dans l'évolution du produit</li><li>Support direct avec le fondateur</li></ul><p><a href=\"https://calendly.com/boulschoonheere\" style=\"background:#C9A354;color:#1a1a2e;padding:12px 24px;border-radius:6px;text-decoration:none;font-weight:bold\">Réserver mon créneau bêta-testeur →</a></p><p>À très bientôt,</p><p><strong>François Boul Schoonheere</strong><br>Fondateur — Tablecho<br><em>Notre mission : préserver votre réputation.</em></p>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SiVSco03lOU6mduQ",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "id": "w2-node-006",
+      "name": "Email Générique",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [750, 700],
+      "parameters": {
+        "sendTo": "={{ $json.email }}",
+        "subject": "={{ $json.prenom }}, merci de votre intérêt pour Tablecho",
+        "message": "=<p>Bonjour {{ $json.prenom }},</p><p>Merci d'avoir pris contact avec Tablecho.</p><p>Je vous réponds personnellement sous 24 heures pour discuter de votre situation et voir comment Tablecho peut vous aider à protéger votre réputation en ligne.</p><p>En attendant, si vous souhaitez aller plus vite, vous pouvez <a href=\"https://calendly.com/boulschoonheere\">réserver directement un créneau de 20 minutes dans mon agenda.</a></p><p>À très bientôt,</p><p><strong>François Boul Schoonheere</strong><br>Fondateur — Tablecho<br><em>Notre mission : préserver votre réputation.</em></p>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SiVSco03lOU6mduQ",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook Bienvenue": {
+      "main": [
+        [
+          { "node": "Switch Profil Quiz", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Switch Profil Quiz": {
+      "main": [
+        [
+          { "node": "Email Exposé", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Email En progression", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Email Prêt", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Email Générique", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

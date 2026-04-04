@@ -1,0 +1,119 @@
+{
+  "name": "Tablecho — Notification Lead",
+  "nodes": [
+    {
+      "id": "w1-node-001",
+      "name": "Webhook Lead",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [200, 300],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tablecho-lead",
+        "responseMode": "onReceived",
+        "responseData": "allEntries"
+      }
+    },
+    {
+      "id": "w1-node-002",
+      "name": "Email Notification François",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [500, 150],
+      "parameters": {
+        "sendTo": "form.action1pro@gmail.com",
+        "subject": "=🆕 Nouveau lead Tablecho — {{ $json.prenom || '' }} {{ $json.nom || '' }} ({{ $json.restaurant || $json.etablissement || 'N/A' }})",
+        "message": "=<h2 style=\"color:#1a1a2e\">🆕 Nouveau lead reçu sur tablecho.com</h2><table style=\"border-collapse:collapse;width:100%;max-width:600px;font-family:sans-serif;font-size:14px\"><tr><td style=\"padding:8px;border-bottom:1px solid #eee\"><strong>Nom</strong></td><td style=\"padding:8px;border-bottom:1px solid #eee\">{{ $json.prenom || '' }} {{ $json.nom || '' }}</td></tr><tr><td style=\"padding:8px;border-bottom:1px solid #eee\"><strong>Email</strong></td><td style=\"padding:8px;border-bottom:1px solid #eee\">{{ $json.email || 'N/A' }}</td></tr><tr><td style=\"padding:8px;border-bottom:1px solid #eee\"><strong>Téléphone</strong></td><td style=\"padding:8px;border-bottom:1px solid #eee\">{{ $json.telephone || 'Non renseigné' }}</td></tr><tr><td style=\"padding:8px;border-bottom:1px solid #eee\"><strong>Établissement</strong></td><td style=\"padding:8px;border-bottom:1px solid #eee\">{{ $json.restaurant || $json.etablissement || 'Non renseigné' }}</td></tr><tr><td style=\"padding:8px;border-bottom:1px solid #eee\"><strong>Ville</strong></td><td style=\"padding:8px;border-bottom:1px solid #eee\">{{ $json.ville || 'Non renseigné' }}</td></tr><tr><td style=\"padding:8px;border-bottom:1px solid #eee\"><strong>Note Google</strong></td><td style=\"padding:8px;border-bottom:1px solid #eee\">{{ $json.note || 'Non renseigné' }}</td></tr><tr><td style=\"padding:8px;border-bottom:1px solid #eee\"><strong>Volume avis/mois</strong></td><td style=\"padding:8px;border-bottom:1px solid #eee\">{{ $json.volume || 'Non renseigné' }}</td></tr><tr><td style=\"padding:8px;border-bottom:1px solid #eee\"><strong>Profil Quiz</strong></td><td style=\"padding:8px;border-bottom:1px solid #eee\">{{ $json.profil || 'Sans quiz' }}</td></tr><tr><td style=\"padding:8px;border-bottom:1px solid #eee\"><strong>Score Quiz</strong></td><td style=\"padding:8px;border-bottom:1px solid #eee\">{{ $json.score || 'N/A' }}/18</td></tr><tr><td style=\"padding:8px;border-bottom:1px solid #eee\"><strong>Message</strong></td><td style=\"padding:8px;border-bottom:1px solid #eee\">{{ $json.message || 'Aucun message' }}</td></tr></table><br><p><a href=\"https://www.notion.so/Tablecho-CRM-Accueil-5851beb1dffb4c3fa554f30cf25c34a9\" style=\"background:#C9A354;color:#1a1a2e;padding:12px 24px;border-radius:6px;text-decoration:none;font-weight:bold\">→ Ouvrir dans Notion CRM</a></p>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SiVSco03lOU6mduQ",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "id": "w1-node-003",
+      "name": "Code Notion Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [500, 420],
+      "parameters": {
+        "jsCode": "const d = $input.first().json;\nconst nomComplet = [d.prenom, d.nom].filter(Boolean).join(' ') || 'Contact site';\n\nconst properties = {\n  Nom: { title: [{ text: { content: nomComplet } }] },\n  Email: { email: d.email || null },\n  Statut: { select: { name: '🆕 Nouveau' } },\n  Source: { select: { name: '📝 Formulaire contact' } },\n};\n\nif (d.telephone) {\n  properties['Téléphone'] = { phone_number: d.telephone };\n}\nif (d.restaurant || d.etablissement) {\n  properties['Restaurant'] = { rich_text: [{ text: { content: d.restaurant || d.etablissement } }] };\n}\nif (d.ville) {\n  properties['Ville'] = { rich_text: [{ text: { content: d.ville } }] };\n}\n\nconst noteLines = [\n  d.message || null,\n  d.note ? 'Note Google : ' + d.note : null,\n  d.volume ? 'Volume avis : ' + d.volume : null,\n  d.profil ? 'Profil quiz : ' + d.profil + (d.score ? ' (score ' + d.score + '/18)' : '') : null,\n].filter(Boolean);\n\nif (noteLines.length) {\n  properties['Notes'] = { rich_text: [{ text: { content: noteLines.join('\\n') } }] };\n}\n\nreturn [{\n  json: {\n    parent: { database_id: 'bea71342-e846-41ef-b477-fe218aa6793c' },\n    properties\n  }\n}];"
+      }
+    },
+    {
+      "id": "w1-node-004",
+      "name": "Notion Ajouter Lead",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [800, 420],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.notion.com/v1/pages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "Bearer ntn_B98694753864DijXS97gcSFK1robo7dQ7DFRJsrwrVpbd2" },
+            { "name": "Notion-Version", "value": "2022-06-28" }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify($json) }}"
+      }
+    },
+    {
+      "id": "w1-node-005",
+      "name": "Appeler Workflow Bienvenue",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1100, 420],
+      "parameters": {
+        "method": "POST",
+        "url": "https://n8n.srv1496863.hstgr.cloud/webhook/tablecho-bienvenue",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify($('Webhook Lead').first().json) }}"
+      }
+    }
+  ],
+  "connections": {
+    "Webhook Lead": {
+      "main": [
+        [
+          { "node": "Email Notification François", "type": "main", "index": 0 },
+          { "node": "Code Notion Payload", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Code Notion Payload": {
+      "main": [
+        [
+          { "node": "Notion Ajouter Lead", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Notion Ajouter Lead": {
+      "main": [
+        [
+          { "node": "Appeler Workflow Bienvenue", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

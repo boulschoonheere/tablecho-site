@@ -4,3 +4,11 @@ dist
 .env*.local
 .DS_Store
 *.log
+
+.vercel
+
+# Fichiers temporaires et scripts sensibles
+tmp_*.json
+update_fb_token.js
+export_visuels.cjs
+export_visuels.js

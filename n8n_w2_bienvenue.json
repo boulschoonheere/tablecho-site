@@ -1,0 +1,155 @@
+{
+  "name": "Tablecho — Email bienvenue lead",
+  "nodes": [
+    {
+      "id": "bvn-node-001",
+      "name": "Webhook Bienvenue",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [200, 300],
+      "webhookId": "PLACEHOLDER_W2",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tablecho-bienvenue",
+        "responseMode": "onReceived",
+        "responseData": "allEntries",
+        "options": {}
+      }
+    },
+    {
+      "id": "bvn-node-002",
+      "name": "Switch Profil Quiz",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [450, 300],
+      "parameters": {
+        "mode": "rules",
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": { "caseSensitive": false, "leftValue": "", "typeValidation": "strict" },
+                "conditions": [
+                  {
+                    "id": "rule-expose",
+                    "leftValue": "={{ ($json.body || $json).profil_quiz || '' }}",
+                    "rightValue": "Expos",
+                    "operator": { "type": "string", "operation": "contains" }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Exposé"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": false, "leftValue": "", "typeValidation": "strict" },
+                "conditions": [
+                  {
+                    "id": "rule-pret",
+                    "leftValue": "={{ ($json.body || $json).profil_quiz || '' }}",
+                    "rightValue": "Pr",
+                    "operator": { "type": "string", "operation": "contains" }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Prêt"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "bvn-node-003",
+      "name": "Email Exposé",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [750, 100],
+      "parameters": {
+        "sendTo": "={{ ($json.body || $json).email }}",
+        "subject": "={{ (($json.body || $json).nom || '').split(' ')[0] }}, votre réputation mérite une réponse rapide",
+        "message": "=<p style=\"font-family:sans-serif\">Bonjour {{ (($json.body || $json).nom || '').split(' ')[0] }},</p><p style=\"font-family:sans-serif\">Merci d'avoir répondu au quiz Tablecho.</p><p style=\"font-family:sans-serif\">Votre profil indique que <strong>{{ ($json.body || $json).etablissement || 'votre établissement' }}</strong> est aujourd'hui exposé à des risques réels sur votre réputation en ligne.</p><p style=\"font-family:sans-serif\">C'est exactement le problème que Tablecho résout.</p><p style=\"font-family:sans-serif\">Tablecho détecte chaque avis, génère une réponse humanisée adaptée à votre ton, et vous la soumet en 30 secondes pour validation. Vous gardez la main. L'IA fait la veille.</p><p style=\"font-family:sans-serif\">15 minutes suffisent pour voir si le projet correspond à votre situation. Répondez à cet email ou réservez un créneau :</p><p><a href=\"https://calendly.com/boulschoonheere\" style=\"background:#C9A354;color:#1a1a2e;padding:10px 20px;border-radius:6px;text-decoration:none;font-weight:bold;font-family:sans-serif\">Réserver un créneau →</a></p><br><p style=\"font-family:sans-serif\"><strong>François Boul Schoonheere</strong><br>Fondateur — Tablecho<br><em>Notre mission : préserver votre réputation.</em><br>tablecho.com</p>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SiVSco03lOU6mduQ",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "id": "bvn-node-004",
+      "name": "Email Prêt",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [750, 300],
+      "parameters": {
+        "sendTo": "={{ ($json.body || $json).email }}",
+        "subject": "={{ (($json.body || $json).nom || '').split(' ')[0] }}, vous êtes exactement le profil qu'on cherche",
+        "message": "=<p style=\"font-family:sans-serif\">Bonjour {{ (($json.body || $json).nom || '').split(' ')[0] }},</p><p style=\"font-family:sans-serif\">Votre profil Tablecho est clair : vous comprenez l'enjeu de la réputation en ligne et vous êtes prêt à agir.</p><p style=\"font-family:sans-serif\">Je cherche des restaurateurs comme vous pour les premiers mois de lancement en PACA.</p><p style=\"font-family:sans-serif\"><strong>Être bêta-testeur :</strong> accès prioritaire, tarif préférentiel garanti à vie, votre voix dans le développement du produit.</p><p><a href=\"https://calendly.com/boulschoonheere\" style=\"background:#C9A354;color:#1a1a2e;padding:10px 20px;border-radius:6px;text-decoration:none;font-weight:bold;font-family:sans-serif\">Réserver mon créneau bêta →</a></p><br><p style=\"font-family:sans-serif\"><strong>François Boul Schoonheere</strong><br>Fondateur — Tablecho<br><em>Notre mission : préserver votre réputation.</em><br>tablecho.com</p>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SiVSco03lOU6mduQ",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "id": "bvn-node-005",
+      "name": "Email En progression",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [750, 500],
+      "parameters": {
+        "sendTo": "={{ ($json.body || $json).email }}",
+        "subject": "=Tablecho — votre profil et les prochaines étapes",
+        "message": "=<p style=\"font-family:sans-serif\">Bonjour {{ (($json.body || $json).nom || '').split(' ')[0] }},</p><p style=\"font-family:sans-serif\">Merci pour votre intérêt pour Tablecho.</p><p style=\"font-family:sans-serif\">Votre profil montre que vous gérez votre réputation en ligne mais que vous pouvez faire beaucoup mieux.</p><p style=\"font-family:sans-serif\">Tablecho peut automatiser ce que vous faites manuellement — et le faire mieux, plus vite, à chaque avis.</p><p><a href=\"https://calendly.com/boulschoonheere\" style=\"background:#C9A354;color:#1a1a2e;padding:10px 20px;border-radius:6px;text-decoration:none;font-weight:bold;font-family:sans-serif\">Échange de 15 minutes →</a></p><br><p style=\"font-family:sans-serif\"><strong>François Boul Schoonheere</strong><br>Fondateur — Tablecho<br><em>Notre mission : préserver votre réputation.</em><br>tablecho.com</p>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SiVSco03lOU6mduQ",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook Bienvenue": {
+      "main": [
+        [
+          { "node": "Switch Profil Quiz", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Switch Profil Quiz": {
+      "main": [
+        [
+          { "node": "Email Exposé", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Email Prêt", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Email En progression", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
