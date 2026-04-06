@@ -22,65 +22,86 @@ export default async function handler(req, res) {
     })
   }
 
+  // Champs envoyés par Contact.jsx
   const {
-    prenom, nom, email, telephone,
-    restaurant, ville, message,
-    source, profil, score,
-    volume, note, temps, frein,
+    nom,           // nom complet (prenom + nom combinés côté front)
+    email,
+    telephone,
+    etablissement,
+    ville,
+    message,
+    note_google,   // valeur select quiz (ex: "⭐⭐ Entre 3.5 et 4.0")
+    volume_avis,   // valeur select quiz (ex: "📊 Entre 5 et 20")
+    profil_quiz,   // valeur select quiz (ex: "🔴 Exposé — urgent")
+    score_quiz,    // nombre brut (ex: "14")
+    source,        // "📝 Formulaire contact" ou "🎯 Quiz site web"
   } = req.body
 
-  const nomComplet = [prenom, nom].filter(Boolean).join(' ')
+  const today = new Date().toISOString().split('T')[0] // YYYY-MM-DD
 
   const properties = {
-    Nom: {
-      title: [{ text: { content: nomComplet || 'Contact site' } }],
+    // ── Propriétés obligatoires ──────────────────────────────────
+    'Nom complet': {
+      title: [{ text: { content: nom || 'Contact site' } }],
     },
-    Email: { email: email || null },
-    Statut: {
+    'Email': {
+      email: email || null,
+    },
+    'Source': {
+      select: { name: source || '📝 Formulaire contact' },
+    },
+    'Statut Lead': {
       select: { name: '🆕 Nouveau' },
     },
-    Source: {
-      select: { name: source || '🌐 Site web' },
+    'Date premier contact': {
+      date: { start: today },
     },
   }
 
+  // ── Propriétés optionnelles ──────────────────────────────────
   if (telephone) {
-    properties.Téléphone = { phone_number: telephone }
+    properties['Téléphone'] = { phone_number: telephone }
   }
 
-  if (restaurant) {
-    properties.Restaurant = {
-      rich_text: [{ text: { content: restaurant } }],
+  if (etablissement) {
+    properties['Établissement'] = {
+      rich_text: [{ text: { content: etablissement } }],
     }
   }
 
   if (ville) {
-    properties.Ville = {
+    properties['Ville'] = {
       rich_text: [{ text: { content: ville } }],
     }
   }
 
-  if (profil) {
-    properties['Profil quiz'] = {
-      rich_text: [{ text: { content: `${profil} (score ${score}/18)` } }],
+  if (note_google) {
+    properties['Note Google actuelle'] = {
+      select: { name: note_google },
     }
   }
 
-  // Notes enrichies avec toutes les données quiz
-  const noteLines = [
-    message,
-    volume ? `Volume avis : ${volume}` : null,
-    note ? `Note Google : ${note}` : null,
-    temps ? `Temps réponse : ${temps}` : null,
-    frein ? `Frein principal : ${frein}` : null,
-    restaurant ? `Restaurant : ${restaurant}` : null,
-    ville ? `Ville : ${ville}` : null,
-    telephone ? `Tél : ${telephone}` : null,
-  ].filter(Boolean)
+  if (volume_avis) {
+    properties['Volume avis/mois'] = {
+      select: { name: volume_avis },
+    }
+  }
 
-  if (noteLines.length) {
-    properties.Notes = {
-      rich_text: [{ text: { content: noteLines.join('\n') } }],
+  if (profil_quiz) {
+    properties['Profil Quiz'] = {
+      select: { name: profil_quiz },
+    }
+  }
+
+  if (score_quiz !== undefined && score_quiz !== '') {
+    properties['Score Quiz'] = {
+      number: Number(score_quiz),
+    }
+  }
+
+  if (message) {
+    properties['Message initial'] = {
+      rich_text: [{ text: { content: message } }],
     }
   }
 
