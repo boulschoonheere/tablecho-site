@@ -28,7 +28,7 @@ const Investisseurs = () => {
 
   const verifier = (e) => {
     e.preventDefault()
-    if (mdp === PASSWORD) {
+    if (mdp.trim() === "tablechoinvest") {
       setAcces(true)
       setErreur(false)
     } else {
