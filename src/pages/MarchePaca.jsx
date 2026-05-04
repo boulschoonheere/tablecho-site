@@ -107,7 +107,7 @@ const MarchePaca = () => (
               et une culture entrepreneuriale propice à l'adoption des outils numériques.
             </p>
             <p className="font-inter text-base text-anthracite/80 leading-relaxed">
-              L'objectif Phase 2 (avril 2026) est de capitaliser sur les bêta-testeurs
+              L'objectif Phase 2 (avril 2027) est de capitaliser sur les bêta-testeurs
               Saint-Tropez pour recruter les premiers clients PACA en mode ambassadeurs.
             </p>
           </FadeUp>

@@ -16,9 +16,9 @@ const stats = [
 ]
 
 const milestones = [
-  { phase: 'Phase 1', date: 'Automne 2025', titre: 'Bêta privée', desc: '3 à 5 restaurateurs du Golfe de Saint-Tropez. Validation produit, ajustements UX, premiers témoignages.' },
-  { phase: 'Phase 2', date: 'Avril 2026', titre: 'Lancement PACA', desc: 'Événement annuel Saint-Tropez — chefs de renom, recrutement premium, crédibilité presse nationale.' },
-  { phase: 'Phase 3', date: '2027', titre: 'Expansion nationale', desc: 'Couverture France entière, partenariats distributeurs, outillage multi-établissements.' },
+  { phase: 'Phase 1', date: 'Été–automne 2026', titre: 'Bêta privée', desc: '3 à 5 restaurateurs du Golfe de Saint-Tropez. Validation produit, ajustements UX, premiers témoignages.' },
+  { phase: 'Phase 2', date: 'Avril 2027', titre: 'Lancement PACA', desc: 'Événement annuel Saint-Tropez — chefs de renom, recrutement premium, crédibilité presse nationale.' },
+  { phase: 'Phase 3', date: '2028', titre: 'Expansion nationale', desc: 'Couverture France entière, partenariats distributeurs, outillage multi-établissements.' },
 ]
 
 const Investisseurs = () => {

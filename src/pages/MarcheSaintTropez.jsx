@@ -114,7 +114,7 @@ const MarcheSaintTropez = () => (
           <FadeUp delay={0.2}>
             <div className="bg-anthracite rounded-xl p-8">
               <p className="font-inter font-semibold text-or text-sm uppercase tracking-wider mb-6">
-                Stratégie Phase 1 — Automne 2025
+                Stratégie Phase 1 — Été–automne 2026
               </p>
               <div className="space-y-4">
                 {[
@@ -157,7 +157,7 @@ const MarcheSaintTropez = () => (
       <div className="max-w-4xl mx-auto">
         <FadeUp>
           <div className="bg-or/10 border border-or/30 rounded-xl p-10">
-            <p className="font-inter text-xs text-or uppercase tracking-widest mb-4">Phase 2 — Avril 2026</p>
+            <p className="font-inter text-xs text-or uppercase tracking-widest mb-4">Phase 2 — Avril 2027</p>
             <h2 className="font-playfair text-3xl text-anthracite mb-6">
               L'événement annuel Saint-Tropez
             </h2>
