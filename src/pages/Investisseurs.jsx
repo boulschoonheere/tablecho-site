@@ -9,9 +9,9 @@ import { CONFIG } from '../config'
 const PASSWORD = import.meta.env.VITE_INVESTOR_PASSWORD
 
 const stats = [
-  { valeur: '157 000', label: 'restaurants en France', source: 'INSEE 2023' },
-  { valeur: '88 %', label: 'des clients lisent les avis avant de choisir', source: 'BrightLocal 2023' },
-  { valeur: '123 Mds€', label: 'de marché adressable (restauration FR)', source: 'GNI 2023' },
+  { valeur: '157 000', label: 'restaurants indépendants en France', source: 'Food Service Vision 2024' },
+  { valeur: '93 %', label: 'des clients lisent les avis avant de choisir un restaurant', source: 'BrightLocal 2023' },
+  { valeur: '123 Mds€', label: 'Marché de la consommation alimentaire hors domicile (CAHD) France 2024', source: 'Gira Conseil — Étude Restauration 2024' },
   { valeur: '49 €/mois', label: 'abonnement cible — SaaS B2B', source: 'Modèle Tablecho' },
 ]
 
