@@ -11,7 +11,7 @@ const Footer = () => (
         <div className="col-span-2 lg:col-span-1">
           <p className="font-playfair text-2xl text-or font-bold mb-3">Tablecho</p>
           <p className="font-inter text-sm text-white/60 italic leading-relaxed mb-4">
-            Notre mission : préserver votre réputation.
+            Préserver la réputation des restaurants indépendants.
           </p>
           <a href={CONFIG.FACEBOOK_URL} target="_blank" rel="noopener noreferrer"
             className="text-white/60 hover:text-or transition-colors text-sm font-inter">
