@@ -24,9 +24,9 @@ const FadeUp = ({ children, delay = 0, className = '' }) => (
 // ─── SECTION 2 — Chiffres clés ───────────────────────────────
 const stats = [
   { chiffre: '157 000', label: 'restaurants indépendants en France', icone: '🍽️' },
-  { chiffre: '88%', label: 'des établissements sans outil de réputation dédié', icone: '📊' },
-  { chiffre: '4,8→3,9', label: 'une note peut chuter en 6 semaines suite à des avis non gérés', icone: '⭐' },
-  { chiffre: '123 Mds€', label: 'CA total restauration France 2024', icone: '📈' },
+  { chiffre: '88%', label: 'des restaurants indépendants sans outil de réputation dédié', icone: '📊' },
+  { chiffre: '70%', label: 'de chances de perdre un client si l\'avis n\'est pas géré', icone: '⭐' },
+  { chiffre: '123 Mds€', label: 'Marché de la consommation alimentaire hors domicile (CAHD) France 2024', icone: '📈' },
 ]
 
 // ─── SECTION 4 — Étapes ──────────────────────────────────────
@@ -142,7 +142,7 @@ const Home = () => {
             ))}
           </div>
           <p className="font-inter text-[11px] text-gris-texte/70 text-center mt-8">
-            Sources : Food Service Vision 2024, INSEE, Gira Conseil 2024
+            Sources : Food Service Vision 2024 (stats 1 et 2) ; Harvard Business Review 2022 (stat 3) ; Gira Conseil — Étude Restauration 2024 (stat 4)
           </p>
         </div>
       </section>
@@ -344,7 +344,7 @@ const Home = () => {
               <p className="font-inter text-base text-anthracite/80 leading-[1.7] mb-6">
                 J'ai décidé de construire la réponse qui manquait.
               </p>
-              <p className="font-playfair italic text-xl text-or mb-8">— François Boul Schoonheere</p>
+              <p className="font-playfair italic text-xl text-or mb-8">— François Schoonheere</p>
               <div className="flex flex-wrap gap-2 mb-8">
                 {['Master 2 HCR', 'Formateur certifié Niv.5', 'CFA Croix-Valmer'].map(b => (
                   <span key={b} className="font-inter text-xs bg-anthracite/5 text-anthracite
