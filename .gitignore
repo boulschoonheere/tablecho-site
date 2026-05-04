@@ -12,3 +12,7 @@ tmp_*.json
 update_fb_token.js
 export_visuels.cjs
 export_visuels.js
+
+# Prompts T0 de mission (non versionnés)
+T0_PROMPT_FIX.md
+T0_*.md
