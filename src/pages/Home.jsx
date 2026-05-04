@@ -344,7 +344,7 @@ const Home = () => {
               <p className="font-inter text-base text-anthracite/80 leading-[1.7] mb-6">
                 J'ai décidé de construire la réponse qui manquait.
               </p>
-              <p className="font-playfair italic text-xl text-or mb-8">— François Boul Schoonheere</p>
+              <p className="font-playfair italic text-xl text-or mb-8">— François Schoonheere</p>
               <div className="flex flex-wrap gap-2 mb-8">
                 {['Master 2 HCR', 'Formateur certifié Niv.5', 'CFA Croix-Valmer'].map(b => (
                   <span key={b} className="font-inter text-xs bg-anthracite/5 text-anthracite
