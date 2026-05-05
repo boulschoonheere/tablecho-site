@@ -10,6 +10,6 @@ export const CONFIG = {
   CALENDLY_URL: 'https://calendly.com/boulschoonheere',
   FACEBOOK_URL: 'https://facebook.com/Tablecho',
   EMAIL: 'form.action1pro@gmail.com',
-  PITCH_DECK_URL: 'https://gamma.app/docs/i41c35hy45qxe2b',
+  PITCH_DECK_URL: 'https://gamma.app/docs/Tablecho-e8v1omj019fb1yv',
   SITE_URL: 'https://tablecho.com',
 }
