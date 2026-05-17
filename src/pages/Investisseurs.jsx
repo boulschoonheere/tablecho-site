@@ -6,8 +6,6 @@ import Footer from '../components/Footer'
 import BoutonOr from '../components/BoutonOr'
 import { CONFIG } from '../config'
 
-const PASSWORD = import.meta.env.VITE_INVESTOR_PASSWORD
-
 const stats = [
   { valeur: '157 000', label: 'restaurants indépendants en France', source: 'Food Service Vision 2024' },
   { valeur: '93 %', label: 'des clients lisent les avis avant de choisir un restaurant', source: 'BrightLocal 2023' },
@@ -24,15 +22,35 @@ const milestones = [
 const Investisseurs = () => {
   const [mdp, setMdp] = useState('')
   const [acces, setAcces] = useState(false)
-  const [erreur, setErreur] = useState(false)
+  const [erreur, setErreur] = useState(null)
+  const [chargement, setChargement] = useState(false)
 
-  const verifier = (e) => {
+  const verifier = async (e) => {
     e.preventDefault()
-    if (mdp.trim() === "tablechoinvest") {
-      setAcces(true)
-      setErreur(false)
-    } else {
-      setErreur(true)
+    setChargement(true)
+    setErreur(null)
+    try {
+      const res = await fetch('/api/investors-auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: mdp }),
+      })
+      if (res.ok) {
+        const data = await res.json()
+        if (data.ok) {
+          setAcces(true)
+          return
+        }
+      }
+      if (res.status === 401) {
+        setErreur("Mot de passe incorrect. Contactez François pour obtenir l'accès.")
+      } else {
+        setErreur('Service temporairement indisponible. Réessayez plus tard ou contactez François.')
+      }
+    } catch {
+      setErreur('Service temporairement indisponible. Réessayez plus tard ou contactez François.')
+    } finally {
+      setChargement(false)
     }
   }
 
@@ -69,14 +87,15 @@ const Investisseurs = () => {
               />
               {erreur && (
                 <p className="font-inter text-xs text-rouge-erreur">
-                  Code incorrect. Contactez François pour obtenir l'accès.
+                  {erreur}
                 </p>
               )}
               <button
                 type="submit"
-                className="w-full bg-or text-anthracite font-inter font-semibold py-3 rounded hover:bg-or-clair transition-colors"
+                disabled={chargement}
+                className="w-full bg-or text-anthracite font-inter font-semibold py-3 rounded hover:bg-or-clair transition-colors disabled:opacity-60"
               >
-                Accéder →
+                {chargement ? 'Vérification…' : 'Accéder →'}
               </button>
             </form>
             <p className="font-inter text-xs text-white/40 mt-6">
